@@ -45,14 +45,14 @@ S3 raw/ → Lambda (transform) → S3 processed/ → Redshift (orders table)
         IGNOREHEADER 1;
         ```
 
-**Project Highlights**
+## Project Highlights
 - Event-driven ETL using AWS Lambda
 - Data cleaning, type conversion, and derived column computation
 - Proper S3 data lake structure (raw/ vs processed/)
 - Redshift table design and COPY data loading
 - Demonstrates cloud ETL practices suitable for analytics pipelines
 
-**Repository Structure**
+## Repository Structure
 etl-pipeline-practice-project/
 ├── data/
 │   └── raw_orders.csv         # Sample raw dataset
