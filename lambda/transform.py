@@ -1,6 +1,7 @@
 import csv
 import boto3
 from datetime import datetime
+import io
 
 s3 = boto3.client("s3")
 
@@ -42,14 +43,14 @@ def lambda_handler(event, context):
         }
         processed_rows.append(processed_row)
 
-    output_lines = []
+    output_buffer = io.StringIO()
     fieldnames = processed_rows[0].keys()
 
-    writer = csv.DictWriter(output_lines, fieldnames=fieldnames)
+    writer = csv.DictWriter(output_buffer, fieldnames=fieldnames)
     writer.writeheader()
     writer.writerows(processed_rows)
 
-    output_csv = "\n".join(output_lines)
+    output_csv = "\n".join(output_buffer)
     output_key = key.replace("raw/", "processed/")
 
     s3.put_object(
