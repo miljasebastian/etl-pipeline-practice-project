@@ -42,21 +42,21 @@ def lambda_handler(event, context):
         }
         processed_rows.append(processed_row)
 
-        output_lines = []
-        fieldnames = processed_rows[0].keys()
+    output_lines = []
+    fieldnames = processed_rows[0].keys()
 
-        writer = csv.DictWriter(output_lines, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(processed_rows)
+    writer = csv.DictWriter(output_lines, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(processed_rows)
 
-        output_csv = "\n".join(output_lines)
-        output_key = key.replace("raw/", "processed/")
+    output_csv = "\n".join(output_lines)
+    output_key = key.replace("raw/", "processed/")
 
-        s3.put_object(
-            Bucket=bucket,
-            Key=output_key,
-            Body=output_csv.encode("utf-8")
-        )
+    s3.put_object(
+        Bucket=bucket,
+        Key=output_key,
+        Body=output_csv.encode("utf-8")
+    )
 
-        print(f"Written cleaned file to s3://{bucket}/{output_key}")
+    print(f"Written cleaned file to s3://{bucket}/{output_key}")
 
