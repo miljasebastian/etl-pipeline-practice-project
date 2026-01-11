@@ -53,6 +53,7 @@ S3 raw/ → Lambda (transform) → S3 processed/ → Redshift (orders table)
 - Demonstrates cloud ETL practices suitable for analytics pipelines
 
 ## Repository Structure
+```
 etl-pipeline-practice-project/
 ├── data/
 │   └── raw_orders.csv         # Sample raw dataset
@@ -62,3 +63,4 @@ etl-pipeline-practice-project/
 │   └── redshift_tables.sql    # Table schema and COPY command for Redshift
 ├── requirements.txt           # Python dependencies
 └── README.md                  # Project documentation
+```
