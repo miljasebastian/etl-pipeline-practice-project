@@ -27,32 +27,42 @@ def lambda_handler(event, context):
 
         quantity = int(quantity_raw) if quantity_raw else 0
         price = float(price_raw) if price_raw else 0.0
-        try:
-            order_date = datetime.strptime(date_raw, "%Y-%m-%d").date().isoformat() if date_raw else ""
-        except ValueError:
-            order_date = ""
+
+        if date_raw:
+            for fmt in (f"%d-%m-%Y", f"%m-%d-%Y", f"%Y-%m-%d"):
+                try:
+                    order_date = datetime.strptime(date_raw, fmt).date().isoformat()
+                    break
+                except ValueError:
+                    order_date = ""
 
         total_amount = quantity * price
 
         processed_row = {
             "order_id": row.get("order_id"),
             "order_date": order_date,
+            "customer_id": row.get("customer_id"),
+            "product": row.get("product"),
             "quantity": quantity,
             "price": price,
             "total_amount": total_amount
         }
         processed_rows.append(processed_row)
 
-    output_buffer = io.StringIO()
-    fieldnames = processed_rows[0].keys()
+    output_buffer = io.StringIO(newline="")
+    fieldnames = list(processed_rows[0].keys())
 
     writer = csv.DictWriter(output_buffer, fieldnames=fieldnames)
     writer.writeheader()
     writer.writerows(processed_rows)
 
-    output_csv = "\n".join(output_buffer)
-    output_key = key.replace("raw/", "processed/")
+    output_csv = output_buffer.getvalue()
+    output_key = key.replace("raw", "processed")
 
+    print(f"About to write {len(processed_rows)} rows to {output_key}")
+    print(f"Output CSV length: {len(output_csv)}")
+    print(output_csv[:200])
+    print(fieldnames)
     s3.put_object(
         Bucket=bucket,
         Key=output_key,
