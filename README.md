@@ -33,6 +33,8 @@ S3 raw/ → Lambda (transform) → S3 processed/ → Redshift (orders table)
         CREATE TABLE IF NOT EXISTS orders (
             order_id        VARCHAR(50),
             order_date      DATE,
+            customer_id		VARCHAR(5),
+            product			VARCHAR(10),
             quantity        INTEGER,
             price           DECIMAL(10,2),
             total_amount    DECIMAL(12,2)
